@@ -2,6 +2,12 @@
 
 A new Flutter project.
 
+
+## THINGS to ADD
+- invalid title response
+- improvise ui for both light and dark mode
+- whole task to be show on clicked
+- 
 ## Getting Started
 
 This project is a starting point for a Flutter application.
