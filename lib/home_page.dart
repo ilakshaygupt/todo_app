@@ -3,6 +3,7 @@ import 'package:todo_app/database.dart';
 import 'package:todo_app/todo_tile.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:hive/hive.dart';
+import 'package:get/get.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -11,6 +12,8 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  late ThemeController themeController;
+
   final _todo = Hive.box('todo');
   final titleController = TextEditingController();
   // List toDoList = [];
@@ -23,6 +26,7 @@ class _HomePageState extends State<HomePage> {
     } else {
       db.createIntialData();
     }
+    themeController = Get.put(ThemeController());
   }
 
   void checkBoxChanged(bool? value, int index) {
@@ -115,12 +119,23 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.yellowAccent,
         title: const Text(
           'Todo App',
-          style: TextStyle(fontSize: 28),
+          style: TextStyle(fontSize: 20, color: Colors.black),
         ),
         actions: [
-          IconButton(onPressed: () {}, icon: const Icon(Icons.dark_mode))
+          IconButton(
+            onPressed: () {
+              themeController.toggleTheme();
+            },
+            icon: Obx(() => Icon(
+                  color: Colors.black,
+                  themeController.isDarkMode.value
+                      ? Icons.light_mode
+                      : Icons.dark_mode,
+                )),
+          ),
         ],
       ),
       floatingActionButton: FloatingActionButton(
@@ -148,5 +163,14 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
     );
+  }
+}
+
+class ThemeController extends GetxController {
+  RxBool isDarkMode = true.obs;
+
+  void toggleTheme() {
+    isDarkMode.toggle();
+    Get.changeThemeMode(isDarkMode.value ? ThemeMode.dark : ThemeMode.light);
   }
 }
