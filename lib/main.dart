@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:todo_app/home_page.dart';
+import 'package:get/get.dart';
 
 void main() async {
   await Hive.initFlutter();
@@ -12,28 +13,26 @@ class MyApp extends StatelessWidget {
   const MyApp({super.key});
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return (GetMaterialApp(
       debugShowCheckedModeBanner: false,
       darkTheme: ThemeData.dark().copyWith(
         useMaterial3: true,
-        colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF1E1E1E)),
+        colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFFFFBF00)),
         cardTheme: const CardTheme().copyWith(
-          color: ColorScheme.fromSeed(seedColor: const Color(0xFF1E1E1E))
+          color: ColorScheme.fromSeed(seedColor: const Color(0xFFFFBF00))
               .secondaryContainer,
           margin: const EdgeInsets.symmetric(
             horizontal: 16,
             vertical: 8,
           ),
         ),
-        elevatedButtonTheme: ElevatedButtonThemeData(
-          style: ElevatedButton.styleFrom(
-            backgroundColor:
-                ColorScheme.fromSeed(seedColor: const Color(0xFF1E1E1E))
-                    .primaryContainer,
-            foregroundColor:
-                ColorScheme.fromSeed(seedColor: const Color(0xFF1E1E1E))
-                    .onPrimaryContainer,
-          ),
+        floatingActionButtonTheme: FloatingActionButtonThemeData(
+          backgroundColor:
+              ColorScheme.fromSeed(seedColor: const Color(0xFFFFBF00))
+                  .primaryContainer,
+          foregroundColor:
+              ColorScheme.fromSeed(seedColor: const Color(0xFFFFBF00))
+                  .onPrimaryContainer,
         ),
       ),
       theme: ThemeData().copyWith(
@@ -50,7 +49,7 @@ class MyApp extends StatelessWidget {
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ElevatedButton.styleFrom(
             backgroundColor:
-                ColorScheme.fromSeed(seedColor: const Color(0xFFE0E0E0))
+                ColorScheme.fromSeed(seedColor: const Color(0xFFFFBF00))
                     .primaryContainer,
           ),
         ),
@@ -64,8 +63,7 @@ class MyApp extends StatelessWidget {
               ),
             ),
       ),
-      themeMode: ThemeMode.system,
       home: const HomePage(),
-    );
+    ));
   }
 }
