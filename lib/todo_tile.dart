@@ -46,7 +46,7 @@ class ToDoTile extends StatelessWidget {
               Checkbox(
                 value: isDone,
                 onChanged: onChanged,
-                activeColor: Colors.black,
+                activeColor: Colors.transparent,
               ),
               Text(
                 title,
