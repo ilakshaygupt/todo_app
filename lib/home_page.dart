@@ -130,7 +130,7 @@ class _HomePageState extends State<HomePage> {
                 Expanded(
                   child: TextField(
                     controller: titleController,
-                      style: TextStyle(color: Colors.black)),
+                      style: TextStyle(color: Colors.black),
                     decoration: InputDecoration(
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(16),
