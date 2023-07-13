@@ -18,10 +18,10 @@ class ToDoTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: const EdgeInsets.fromLTRB(8, 8, 8, 8),
       child: Dismissible(
         key: Key(title),
-        direction: DismissDirection.endToStart,
+        direction: DismissDirection.startToEnd,
         background: Container(
           alignment: Alignment.centerRight,
         ),
@@ -30,7 +30,7 @@ class ToDoTile extends StatelessWidget {
         },
         child: Container(
           decoration: BoxDecoration(
-            color: Colors.yellow,
+            color: Theme.of(context).cardTheme.color,
             borderRadius: BorderRadius.circular(12.0),
             boxShadow: const [
               BoxShadow(
@@ -40,7 +40,7 @@ class ToDoTile extends StatelessWidget {
               )
             ],
           ),
-          padding: const EdgeInsets.all(20.0),
+          padding: const EdgeInsets.all(8.0),
           child: Row(
             children: [
               Checkbox(
@@ -51,11 +51,11 @@ class ToDoTile extends StatelessWidget {
               Text(
                 title,
                 style: TextStyle(
-                  decoration:
-                      isDone ? TextDecoration.lineThrough : TextDecoration.none,
-                  color: Colors.black,
-                  fontSize: 18,
-                ),
+                    decoration: isDone
+                        ? TextDecoration.lineThrough
+                        : TextDecoration.none,
+                    fontSize: 18,
+                    color: Theme.of(context).textTheme.titleLarge?.color),
               ),
             ],
           ),

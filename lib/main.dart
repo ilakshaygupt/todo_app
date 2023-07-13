@@ -3,6 +3,12 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:todo_app/home_page.dart';
 import 'package:get/get.dart';
 
+var kColorScheme =
+    ColorScheme.fromSeed(seedColor: Color.fromARGB(255, 60, 59, 47));
+// for checking
+var kDarkColorTheme = ColorScheme.fromSeed(
+    brightness: Brightness.dark, seedColor: Color.fromARGB(255, 253, 255, 255));
+
 void main() async {
   await Hive.initFlutter();
   var box = await Hive.openBox('todo');
@@ -16,53 +22,57 @@ class MyApp extends StatelessWidget {
     return (GetMaterialApp(
       debugShowCheckedModeBanner: false,
       darkTheme: ThemeData.dark().copyWith(
-        useMaterial3: true,
-        colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFFFFBF00)),
-        cardTheme: const CardTheme().copyWith(
-          color: ColorScheme.fromSeed(seedColor: const Color(0xFFFFBF00))
-              .secondaryContainer,
-          margin: const EdgeInsets.symmetric(
-            horizontal: 16,
-            vertical: 8,
+          iconButtonTheme: IconButtonThemeData(
+              style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all(Colors.black54))),
+          useMaterial3: true,
+          colorScheme: const ColorScheme.dark(),
+          cardTheme: const CardTheme().copyWith(
+            color: Colors.black26,
+            margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           ),
-        ),
-        floatingActionButtonTheme: FloatingActionButtonThemeData(
-          backgroundColor:
-              ColorScheme.fromSeed(seedColor: const Color(0xFFFFBF00))
-                  .primaryContainer,
-          foregroundColor:
-              ColorScheme.fromSeed(seedColor: const Color(0xFFFFBF00))
-                  .onPrimaryContainer,
-        ),
-      ),
+          elevatedButtonTheme: ElevatedButtonThemeData(
+            style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.black26,
+                foregroundColor: Colors.black26),
+          ),
+          inputDecorationTheme:
+              const InputDecorationTheme(fillColor: Colors.black26),
+          checkboxTheme: CheckboxThemeData(
+              checkColor: MaterialStateProperty.all(Colors.white)),
+          appBarTheme: const AppBarTheme()
+              .copyWith(backgroundColor: Color.fromARGB(255, 0, 0, 0)),
+          textTheme: ThemeData().textTheme.copyWith(
+              titleLarge: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                  fontSize: 18))),
       theme: ThemeData().copyWith(
-        useMaterial3: true,
-        colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFFFFBF00)),
-        appBarTheme: const AppBarTheme().copyWith(
-          backgroundColor:
-              ColorScheme.fromSeed(seedColor: const Color(0xFFFFBF00))
-                  .onPrimaryContainer,
-          foregroundColor:
-              ColorScheme.fromSeed(seedColor: const Color(0xFFFFBF00))
-                  .primaryContainer,
-        ),
-        elevatedButtonTheme: ElevatedButtonThemeData(
-          style: ElevatedButton.styleFrom(
-            backgroundColor:
-                ColorScheme.fromSeed(seedColor: const Color(0xFFFFBF00))
-                    .primaryContainer,
+          scaffoldBackgroundColor: Colors.yellow,
+          iconButtonTheme: IconButtonThemeData(
+              style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all(
+                      const Color.fromARGB(255, 244, 227, 81)))),
+          useMaterial3: true,
+          colorScheme: const ColorScheme.light(),
+          appBarTheme:
+              const AppBarTheme().copyWith(backgroundColor: Colors.yellow),
+          cardTheme: const CardTheme().copyWith(
+            color: Colors.yellow,
+            margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           ),
-        ),
-        textTheme: ThemeData().textTheme.copyWith(
-              titleLarge: TextStyle(
-                fontWeight: FontWeight.bold,
-                color: ColorScheme.fromSeed(
-                        seedColor: const Color.fromARGB(255, 4, 4, 4))
-                    .onSecondaryContainer,
-                fontSize: 16,
-              ),
-            ),
-      ),
+          checkboxTheme: CheckboxThemeData(
+              checkColor: MaterialStateProperty.all(Colors.black)),
+          elevatedButtonTheme: ElevatedButtonThemeData(
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.yellow),
+          ),
+          inputDecorationTheme:
+              const InputDecorationTheme(fillColor: Colors.yellow),
+          textTheme: ThemeData().textTheme.copyWith(
+              titleLarge: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                  fontSize: 18))),
       home: const HomePage(),
     ));
   }
