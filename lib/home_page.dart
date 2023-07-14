@@ -18,7 +18,6 @@ class _HomePageState extends State<HomePage> {
   final titleController = TextEditingController();
   final searchController = TextEditingController();
   MyDatabase db = MyDatabase();
-  List<dynamic> visibleTasks = [];
   int toggleIndex = 0;
 
   @override
@@ -30,64 +29,26 @@ class _HomePageState extends State<HomePage> {
       db.createInitialData();
     }
     themeController = Get.put(ThemeController());
-    visibleTasks = db.toDoList;
-    visibleTasks.sort((a, b) {
-      if (a[1] && !b[1]) {
-        return 1;
-      } else if (!a[1] && b[1]) {
-        return -1;
-      } else {
-        return 0;
-      }
-    });
   }
 
   void checkBoxChanged(bool? value, int index) {
     setState(() {
-      visibleTasks[index][1] = !visibleTasks[index][1];
-    });
-
-    Future.delayed(const Duration(milliseconds: 100), () {
-      setState(() {
-        if (toggleIndex == 2) {
-          visibleTasks.removeAt(index);
-          visibleTasks.sort((a, b) {
-            if (a[1] && !b[1]) {
-              return 1;
-            } else if (!a[1] && b[1]) {
-              return -1;
-            } else {
-              return 0;
-            }
-          });
-        } else {
-          visibleTasks.sort((a, b) {
-            if (a[1] && !b[1]) {
-              return 1;
-            } else if (!a[1] && b[1]) {
-              return -1;
-            } else {
-              return 0;
-            }
-          });
-        }
-      });
-      db.updateData();
+      db.toDoList[index][1] = !db.toDoList[index][1];
     });
   }
 
   void addTask(String title) {
     setState(() {
-      visibleTasks.add([title, false]);
+      db.toDoList.add([title, false]);
       titleController.clear();
     });
     db.updateData();
   }
 
   void deleteTask(int index) {
-    final textRemoved = visibleTasks[index];
+    final textRemoved = db.toDoList[index];
     setState(() {
-      visibleTasks.removeAt(index);
+      db.toDoList.removeAt(index);
     });
     db.updateData();
     ScaffoldMessenger.of(context).clearSnackBars();
@@ -101,7 +62,7 @@ class _HomePageState extends State<HomePage> {
           label: 'Undo',
           onPressed: () {
             setState(() {
-              visibleTasks.insert(index, textRemoved);
+              db.toDoList.insert(index, textRemoved);
             });
           },
         ),
@@ -112,27 +73,21 @@ class _HomePageState extends State<HomePage> {
   void searchTasks(String query) {
     setState(() {
       if (query.isNotEmpty) {
-        visibleTasks = db.toDoList
+        db.toDoList = db.toDoList
             .where((task) =>
                 task[0].toString().toLowerCase().contains(query.toLowerCase()))
             .toList();
       } else {
-        visibleTasks = db.toDoList;
+        db.toDoList = db.toDoList;
       }
     });
   }
 
-  void toggleTaskList() {
-    setState(() {
-      toggleIndex = (toggleIndex + 1) % 3;
-      if (toggleIndex == 0) {
-        visibleTasks = db.toDoList;
-      } else if (toggleIndex == 1) {
-        visibleTasks = db.getIncompleteItems();
-      } else {
-        visibleTasks = db.getCompleteItems();
-      }
-    });
+  void moveTask(int oldIndex, int newIndex) {
+    if (newIndex > oldIndex) newIndex -= 1;
+    final item = db.toDoList.removeAt(oldIndex);
+    db.toDoList.insert(newIndex, item);
+    db.updateData();
   }
 
   @override
@@ -178,38 +133,34 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
                 const SizedBox(width: 10),
-                Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(5),
-                  ),
-                  child: IconButton(
-                    onPressed: toggleTaskList,
-                    icon: Icon(
-                      toggleIndex == 0
-                          ? Icons.list
-                          : toggleIndex == 1
-                              ? Icons.check_box_outline_blank
-                              : Icons.check_box,
-                    ),
-                  ),
-                ),
               ],
             ),
           ),
           Expanded(
-            child: visibleTasks.isNotEmpty
-                ? ListView.builder(
+            child: db.toDoList.isNotEmpty
+                ? ReorderableListView.builder(
                     physics: const BouncingScrollPhysics(),
                     shrinkWrap: true,
                     padding: const EdgeInsets.fromLTRB(13, 10, 13, 0),
-                    itemCount: visibleTasks.length,
+                    itemCount: db.toDoList.length,
                     itemBuilder: (context, index) {
-                      return ToDoTile(
-                        title: visibleTasks[index][0],
-                        isDone: visibleTasks[index][1],
-                        onChanged: (value) => checkBoxChanged(value, index),
-                        deleteTask: (context) => deleteTask(index),
+                      final item = db.toDoList[index];
+                      return ReorderableDragStartListener(
+                        key: Key(item[0]),
+                        index: index,
+                        child: ToDoTile(
+                          key: ValueKey(item[0]),
+                          title: item[0],
+                          isDone: item[1],
+                          onChanged: (value) => checkBoxChanged(value, index),
+                          deleteTask: (context) => deleteTask(index),
+                        ),
                       );
+                    },
+                    onReorder: (oldIndex, newIndex) {
+                      setState(() {
+                        moveTask(oldIndex, newIndex);
+                      });
                     },
                   )
                 : const Center(
